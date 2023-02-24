@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from keys import SECRET_KEY
 from models import db, connect_db, Cupcake
@@ -14,8 +14,10 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
 connect_db(app)
-db.create_all()
 
 
-
+@app.route('/api/cupcakes')
+def get_cupcakes():
+    cupcakes = [c.serialize() for c in Cupcake.query.all()]
+    return jsonify(cupcakes=cupcakes)
 
