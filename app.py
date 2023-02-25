@@ -17,7 +17,7 @@ connect_db(app)
 
 
 @app.route('/api/cupcakes')
-def get_cupcakes():
+def get_all_cupcakes():
     """API: Get all cupcakes"""
     cupcakes = [c.serialize() for c in Cupcake.query.all()]
     return jsonify(cupcakes=cupcakes)
@@ -46,6 +46,22 @@ def create_cupcake():
     # Return "CREATED" response with JSON
     json_resp = jsonify(cupcake=new_cupcake.serialize())
     return (json_resp, 201)
+
+@app.route('/api/cupcakes/<int:id>', methods=['PATCH'])
+def update_cupcake(id):
+    """API: Update existing cupcake"""
+    cupcake = Cupcake.query.get_or_404(id)
+
+    # Update cupcake with data from body of JSON request if it exists
+    # Otherwise, keep it the same
+    cupcake.flavor = request.json.get('flavor', cupcake.flavor)
+    cupcake.size = request.json.get('size', cupcake.size)
+    cupcake.rating = request.json.get('rating', cupcake.rating)
+    cupcake.image = request.json.get('image', cupcake.image)
+
+    # Update the database with the updated cupcake info and return JSON
+    db.session.commit()
+    return jsonify(cupcake=cupcake.serialize())
 
 
 
