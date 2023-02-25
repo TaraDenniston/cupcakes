@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from keys import SECRET_KEY
 from models import db, connect_db, Cupcake
@@ -15,6 +15,9 @@ debug = DebugToolbarExtension(app)
 
 connect_db(app)
 
+@app.route('/')
+def display_homepage():
+    return render_template('index.html')
 
 @app.route('/api/cupcakes')
 def get_all_cupcakes():
