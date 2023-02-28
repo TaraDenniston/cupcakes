@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-DEFAULT_IMG = 'https://tinyurl.com/demo-cupcake'
+DEFAULT_IMG = 'https://www.trophycupcakes.com/sites/default/files/styles/standard_cupcake_600w/public/cupcakes/cupcake-placeholder-lemon_0.jpg?itok=KOuQiFms'
 
 def connect_db(app):
     db.app = app

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from keys import SECRET_KEY
-from models import db, connect_db, Cupcake
+from models import db, connect_db, Cupcake, DEFAULT_IMG
 
 app = Flask(__name__)
 app.app_context().push()
@@ -39,7 +39,10 @@ def create_cupcake():
     flavor = request.json['flavor']
     size = request.json['size']
     rating = request.json['rating']
-    image = request.json['image']
+    if request.json['image']:
+        image = request.json['image']
+    else: 
+        image = DEFAULT_IMG
 
     # Create new cupcake from data
     new_cupcake = Cupcake(flavor=flavor, size=size, rating=rating, image=image)
