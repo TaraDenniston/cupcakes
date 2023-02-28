@@ -1,18 +1,18 @@
 "use strict";
 
-const $cupcakesList = $("#cupcakes-list");
+const $cupcakesList = $('#cupcakes-list');
+const $form = $('#add-cupcake-form');
 
-
-/*  Get all cupcakes
+/**********************************************************************************
+ *  Get all cupcakes
  *
  *  Returns array of cupcake objects that contain: 
  *  {id, flavor, image, rating, size}
- */ 
-
+ **********************************************************************************/
 async function getAllCupcakes() {
   const cupcakes = [];
 
-  // make request to cupcakes API
+  // make GET request to cupcakes API
   await $.get( `http://127.0.0.1:5000/api/cupcakes`, function( data ) {
     // from the result, add data from each cupcake to the cupcakes array  
     for (let cupcake of data.cupcakes) {
@@ -25,12 +25,12 @@ async function getAllCupcakes() {
 }
 
 
-/* Display cupcakes on DOM
+/**********************************************************************************
+ * Display cupcakes on DOM
  * 
  * Calls getAllCupcakes() and displays returned information about each cupcake
  * on it's own card
- */
-
+ **********************************************************************************/
 async function displayCupcakes() {
 
   // Get list of cupcakes from the API
@@ -54,8 +54,52 @@ async function displayCupcakes() {
 }
 
 
-/* When document has finished loading, execute the display function(s) */
+/**********************************************************************************
+ * Handle New Cupcake form submission: make a request to the API to add a cupcake
+ * Returns new cupcake as object
+ **********************************************************************************/
+async function addCupcake() {
+  // Collect field values from form
+  const flavor = $('#flavor').val();
+  const image = $('#image').val();
+  const rating = $('#rating').val();
+  const size = $('#size').val();
 
+  // Create cupcake object from form data
+  const cupcake = {
+      flavor: flavor,
+      image: image,
+      rating: rating,
+      size: size
+  };
+  
+  // Make POST request to cupcakes API
+  await axios({
+    url: 'http://127.0.0.1:5000/api/cupcakes', 
+    method: 'POST', 
+    data: cupcake
+  });
+  
+  // Reset the form
+  $form.trigger('reset');
+
+  return cupcake;
+}
+
+
+/**********************************************************************************
+ * When New Cupcake form is submitted, call function to handle event and add new
+ * cupcake to DOM
+ **********************************************************************************/
+$form.on('submit', async function(evt) {
+  evt.preventDefault();
+  await addCupcake();
+});
+
+
+/**********************************************************************************
+ * When document has finished loading, execute the display function 
+ **********************************************************************************/
 $(function() {
   displayCupcakes();
 });
